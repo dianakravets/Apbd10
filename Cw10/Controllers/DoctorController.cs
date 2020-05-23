@@ -2,27 +2,72 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cw10.Models;
+using Cw10.DAL;
+using Cw10.DTOs.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cw10.Controllers
 {
-    [Route("api/doctor")]
-    [ApiController]
-    public class DoctorController : ControllerBase
+    public class DoctorController : Controller
     {
-        private readonly CodeFirstContext _context;
-        public DoctorController(CodeFirstContext context)
+        private readonly IDoctorDbService _service;
+        public DoctorController(IDoctorDbService service)
         {
-            _context = context;
+            _service = service;
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetDoctor(int id)
+        {
+            var res = _service.GetDoctor(id);
+
+            if (res != null)
+            {
+                return Ok(res);
+            }
+            else
+            {
+                return NotFound("Nie ma takiego studenta");
+            }
+        }
+        [HttpDelete("{id}")]
+        public void DeleteDoctor(int id)
+        {
+            _service.DeleteDoctor(id);
         }
 
-
-
-       [HttpGet]
-       public IActionResult GetDoctor()
+        [HttpPut("{index}")]
+        public IActionResult ModifyDoctor(int index, ModifyDoctorRequest request)
         {
-            return Ok();
+
+            var res = _service.ModifyDoctor(index, request);
+
+            if (res != null)
+            {
+                return Ok(res);
+            }
+            else
+            {
+                return NotFound("Not found");
+            }
+        }
+        [HttpPost]
+        public IActionResult InsertDoctor(ToInsert request)
+        {
+
+
+            var res = _service.InsertDoctor(request);
+
+            if (res != null)
+            {
+                return Created("", res);
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+
+
         }
     }
 }

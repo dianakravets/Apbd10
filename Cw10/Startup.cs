@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cw10.DAL;
 using Cw10.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,11 +22,13 @@ namespace Cw10
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IDoctorDbService,EfDoctorDbService>();
+            services.AddControllers();
             services.AddDbContext<CodeFirstContext>(options=>
             {
                 options.UseSqlServer("Data Source=db-mssql;Initial Catalog=s19054;Integrated Security=True");
             });
-            services.AddControllers();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
